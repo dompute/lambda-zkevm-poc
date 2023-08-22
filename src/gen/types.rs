@@ -25,10 +25,14 @@ pub const CONTRACTS_PATH: &str = "contracts";
 pub const GENDATA_OUTPUT_PATH: &str = "gendata_output.json";
 
 /// List of contracts as (ContractName, ContractSolidityFile)
-pub const CONTRACTS: &[(&str, &str)] = &[(
-    "OpenZeppelinERC20TestToken",
-    "ERC20/OpenZeppelinERC20TestToken.sol",
-)];
+pub const CONTRACTS: &[(&str, &str)] = &[
+    (
+        "OpenZeppelinERC20TestToken",
+        "ERC20/OpenZeppelinERC20TestToken.sol",
+    ),
+    ("Calculation", "Calculation/Calculation.sol"),
+    ("Groth16Verifier", "Circom/CircomVerifier.sol"),
+];
 
 const GETH0_URL_DEFAULT: &str = "http://localhost:8545";
 

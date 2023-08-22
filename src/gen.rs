@@ -251,6 +251,36 @@ async fn deploy_contracts(
         (block_num.as_u64(), contract.address()),
     );
 
+    // Calculation
+    let contract = deploy(
+        prov_wallet0.clone(),
+        contracts.get("Calculation").expect("contract not found"),
+        (),
+    )
+    .await;
+    let block_num = prov.get_block_number().await.expect("cannot get block_num");
+    blocks.insert("Deploy Calculation".to_string(), block_num.as_u64());
+    deployments.insert(
+        "Calculation".to_string(),
+        (block_num.as_u64(), contract.address()),
+    );
+
+    // Groth16Verifier
+    let contract = deploy(
+        prov_wallet0.clone(),
+        contracts
+            .get("Groth16Verifier")
+            .expect("contract not found"),
+        (),
+    )
+    .await;
+    let block_num = prov.get_block_number().await.expect("cannot get block_num");
+    blocks.insert("Deploy Groth16Verifier".to_string(), block_num.as_u64());
+    deployments.insert(
+        "Groth16Verifier".to_string(),
+        (block_num.as_u64(), contract.address()),
+    );
+
     deployments
 }
 
