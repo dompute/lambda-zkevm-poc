@@ -1,4 +1,3 @@
-use bus_mapping::rpc::GethClient;
 use env_logger::Env;
 use eth_types::Address;
 use ethers::{
@@ -17,6 +16,8 @@ use std::{
     time::Duration,
 };
 use url::Url;
+
+use crate::run::rpc::ZkGethClient;
 
 /// Path to the test contracts
 pub const CONTRACTS_PATH: &str = "contracts";
@@ -100,9 +101,9 @@ impl GenDataOutput {
 }
 
 /// Get the integration test [`GethClient`]
-pub fn get_client() -> GethClient<Http> {
+pub fn get_client() -> ZkGethClient<Http> {
     let transport = Http::new(Url::parse(&GETH0_URL).expect("invalid url"));
-    GethClient::new(transport)
+    ZkGethClient::new(transport)
 }
 
 /// Get the integration test [`Provider`]

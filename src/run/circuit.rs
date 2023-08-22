@@ -1,6 +1,6 @@
 use crate::gen::types::{get_client, GenDataOutput};
 use bus_mapping::{
-    circuit_input_builder::{BuilderClient, CircuitInputBuilder, FixedCParams},
+    circuit_input_builder::{CircuitInputBuilder, FixedCParams},
     mock::BlockData,
 };
 use eth_types::geth_types::GethData;
@@ -36,7 +36,7 @@ use zkevm_circuits::{
     witness::{block_convert, Block},
 };
 
-use super::CIRCUITS_PARAMS;
+use super::{builder::ZkBuilderClient, rpc::TraceCallParams, CIRCUITS_PARAMS};
 
 lazy_static! {
     /// Data generation.
@@ -91,7 +91,7 @@ impl<C: SubCircuit<Fr> + Circuit<Fr>> IntegrationTest<C> {
         }
     }
 
-    fn proof_name(&self, block_tag: &str) -> String {
+    pub fn proof_name(&self, block_tag: &str) -> String {
         format!("{}_{}", self.name, block_tag)
     }
 
@@ -211,14 +211,18 @@ impl<C: SubCircuit<Fr> + Circuit<Fr>> IntegrationTest<C> {
         }
     }
 
-    /// Run integration test at a block identified by a tag.
-    pub async fn test_at_block_tag(&mut self, block_tag: &str, root: bool, actual: bool) {
-        let block_num = *GEN_DATA.blocks.get(block_tag).unwrap();
-        let proof_name = self.proof_name(block_tag);
-        let (builder, _) = gen_inputs(block_num).await;
+    pub async fn test_at_height(
+        &mut self,
+        block_num: u64,
+        proof_name: String,
+        params: &TraceCallParams,
+        root: bool,
+        actual: bool,
+    ) {
+        let (builder, _) = gen_inputs(params, block_num).await;
 
         log::info!(
-            "test {} circuit{}, {} prover, block: #{} - {}",
+            "test {} circuit{}, {} prover, block: #{}",
             self.name,
             if root {
                 " with aggregation (root circuit)"
@@ -227,7 +231,6 @@ impl<C: SubCircuit<Fr> + Circuit<Fr>> IntegrationTest<C> {
             },
             if actual { "real" } else { "mock" },
             block_num,
-            block_tag,
         );
         let mut block = block_convert(&builder).unwrap();
         block.randomness = Fr::from(TEST_MOCK_RANDOMNESS);
@@ -408,15 +411,16 @@ fn test_actual_circuit<C: Circuit<Fr>>(
 
 /// returns gen_inputs for a block number
 async fn gen_inputs(
+    params: &TraceCallParams,
     block_num: u64,
 ) -> (
     CircuitInputBuilder<FixedCParams>,
     eth_types::Block<eth_types::Transaction>,
 ) {
     let cli = get_client();
-    let cli = BuilderClient::new(cli, CIRCUITS_PARAMS).await.unwrap();
+    let cli = ZkBuilderClient::new(cli, CIRCUITS_PARAMS).await.unwrap();
 
-    cli.gen_inputs(block_num).await.unwrap()
+    cli.gen_inputs(params, block_num).await.unwrap()
 }
 
 fn new_empty_block() -> Block<Fr> {

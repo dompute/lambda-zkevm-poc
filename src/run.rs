@@ -1,9 +1,12 @@
-use self::circuit::IntegrationTest;
+use self::{circuit::IntegrationTest, rpc::TraceCallParams};
 use bus_mapping::circuit_input_builder::FixedCParams;
+use eth_types::Address;
 use halo2_proofs::halo2curves::bn256::Fr;
 use zkevm_circuits::evm_circuit::EvmCircuit;
 
+pub mod builder;
 pub mod circuit;
+pub mod rpc;
 
 /// MAX_TXS
 const MAX_TXS: usize = 4;
@@ -37,9 +40,42 @@ const EVM_CIRCUIT_DEGREE: u32 = 18;
 const ROOT_CIRCUIT_SMALL_DEGREE: u32 = 24;
 
 pub async fn run_test() {
-    let mut evm_test: IntegrationTest<EvmCircuit<Fr>> =
+    let mut evm: IntegrationTest<EvmCircuit<Fr>> =
         IntegrationTest::new("EVM", EVM_CIRCUIT_DEGREE, ROOT_CIRCUIT_SMALL_DEGREE);
-    evm_test
-        .test_at_block_tag("ERC20 OpenZeppelin transfer successful", false, true)
-        .await;
+    // TODO: make this configurable
+    test_pure_call(
+        "0xffDb339065c91c88e8a3cC6857359B6c2FB78cf5"
+            .parse()
+            .unwrap(),
+						"0x79bdc88780158af4bd20b969da5173871713114e".parse().unwrap(),
+				100000,
+				hex::decode("771602f700000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003").unwrap(),
+        6,
+        &mut evm,
+    )
+    .await;
+}
+
+async fn test_pure_call(
+    from: Address,
+    to: Address,
+    gas: u64,
+    data: Vec<u8>,
+    block_number: u64,
+    evm: &mut IntegrationTest<EvmCircuit<Fr>>,
+) {
+    let params = TraceCallParams {
+        from: format!("{:?}", from),
+        to: format!("{:?}", to),
+        gas: format!("0x{:x}", gas),
+        data: hex::encode(data),
+    };
+    evm.test_at_height(
+        block_number,
+        evm.proof_name("PureCall"),
+        &params,
+        false,
+        true,
+    )
+    .await;
 }

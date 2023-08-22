@@ -56,6 +56,40 @@ where
     call.tx
 }
 
+async fn gen_calculatioin_call<M>(
+    deployments: &HashMap<String, (u64, Address)>,
+    blocks: &mut HashMap<String, u64>,
+    contracts: &HashMap<String, CompiledContract>,
+    prov: &Arc<M>,
+) where
+    M: Middleware,
+{
+    let contract_address = deployments
+        .get("Calculation")
+        .expect("contract not found")
+        .1;
+    let contract_abi = &contracts
+        .get("Calculation")
+        .expect("contract not found")
+        .abi;
+
+    let contract = Contract::new(contract_address, contract_abi.clone(), prov.clone());
+    let call: ContractCall<M, _> = contract
+        .method::<_, U256>("add", (U256::from(2), U256::from(3)))
+        .expect("cannot construct ERC20 transfer call");
+    // Set gas to avoid `eth_estimateGas` call
+    let call = call.legacy();
+    let call = call.gas(100_000);
+
+    let receipt = send_confirm_tx(prov, call.tx).await;
+    assert_eq!(receipt.status, Some(U64::from(1u64)));
+    blocks.insert(
+        "Calculation add successful".to_string(),
+        receipt.block_number.unwrap().as_u64(),
+    );
+    info!("Calculation add successfully");
+}
+
 async fn gen_erc20_call<M>(
     deployments: &HashMap<String, (u64, Address)>,
     blocks: &mut HashMap<String, u64>,
@@ -318,6 +352,9 @@ pub async fn gen_block_data() {
         wallets[4].address(),
     )
     .await;
+
+    // Calculation call
+    gen_calculatioin_call(&deployments, &mut blocks, &contracts, &wallets[0]).await;
 
     let gen_data = GenDataOutput {
         coinbase: accounts[0],
