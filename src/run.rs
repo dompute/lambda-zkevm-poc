@@ -1,4 +1,5 @@
 use self::{circuit::IntegrationTest, rpc::TraceCallParams};
+use crate::Opts;
 use bus_mapping::circuit_input_builder::FixedCParams;
 use eth_types::Address;
 use halo2_proofs::{halo2curves::bn256::Fr, plonk::Circuit};
@@ -46,7 +47,7 @@ const SUPER_CIRCUIT_DEGREE: u32 = 20;
 #[cfg(feature = "super")]
 const ROOT_CIRCUIT_BIG_DEGREE: u32 = 26;
 
-pub async fn run_test<C>(name: &'static str)
+pub async fn run_test<C>(name: &'static str, opts: &Opts)
 where
     C: SubCircuit<Fr> + Circuit<Fr>,
 {
@@ -60,7 +61,8 @@ where
             (SUPER_CIRCUIT_DEGREE, ROOT_CIRCUIT_BIG_DEGREE)
         }
     };
-    let mut evm: IntegrationTest<C> = IntegrationTest::new(name, degree, root_degree);
+
+    let mut it: IntegrationTest<C> = IntegrationTest::new(name, degree, root_degree);
     // TODO: make this configurable
     test_pure_call(
         "0xffDb339065c91c88e8a3cC6857359B6c2FB78cf5"
@@ -70,7 +72,8 @@ where
 				100000,
 				hex::decode("771602f700000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003").unwrap(),
         6,
-        &mut evm,
+        &mut it,
+        opts,
     )
     .await;
 }
@@ -81,7 +84,8 @@ async fn test_pure_call<C>(
     gas: u64,
     data: Vec<u8>,
     block_number: u64,
-    evm: &mut IntegrationTest<C>,
+    it: &mut IntegrationTest<C>,
+    opts: &Opts,
 ) where
     C: SubCircuit<Fr> + Circuit<Fr>,
 {
@@ -91,12 +95,12 @@ async fn test_pure_call<C>(
         gas: format!("0x{:x}", gas),
         data: hex::encode(data),
     };
-    evm.test_at_height(
+    it.test_at_height(
         block_number,
-        evm.proof_name("PureCall"),
+        it.proof_name("PureCall"),
         &params,
-        false,
-        true,
+        opts.is_root(),
+        opts.is_actual(),
     )
     .await;
 }

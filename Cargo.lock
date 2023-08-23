@@ -6452,6 +6452,7 @@ version = "0.1.0"
 dependencies = [
  "anvil",
  "bus-mapping",
+ "clap",
  "env_logger",
  "eth-types",
  "ethers 2.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
