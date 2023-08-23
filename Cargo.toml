@@ -29,3 +29,7 @@ zkevm-circuits = { path = "../zkevm-circuits/zkevm-circuits" }
 mock = { path = "../zkevm-circuits/mock" }
 
 anvil = { path = "../foundry/anvil" }
+
+
+[features]
+super = []

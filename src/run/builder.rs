@@ -165,7 +165,6 @@ impl<P: JsonRpcClient> ZkBuilderClient<P> {
         ),
         Error,
     > {
-        println!("@@ begin of gen inputs");
         let (eth_block, geth_traces, history_hashes, prev_state_root) =
             self.get_block(params, block_num).await?;
         println!("=== DBG 1 ===");

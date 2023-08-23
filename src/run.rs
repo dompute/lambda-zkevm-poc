@@ -1,8 +1,8 @@
 use self::{circuit::IntegrationTest, rpc::TraceCallParams};
 use bus_mapping::circuit_input_builder::FixedCParams;
 use eth_types::Address;
-use halo2_proofs::halo2curves::bn256::Fr;
-use zkevm_circuits::evm_circuit::EvmCircuit;
+use halo2_proofs::{halo2curves::bn256::Fr, plonk::Circuit};
+use zkevm_circuits::util::SubCircuit;
 
 pub mod builder;
 pub mod circuit;
@@ -36,12 +36,31 @@ const CIRCUITS_PARAMS: FixedCParams = FixedCParams {
     max_keccak_rows: MAX_KECCAK_ROWS,
 };
 
+#[cfg(not(feature = "super"))]
 const EVM_CIRCUIT_DEGREE: u32 = 18;
+#[cfg(not(feature = "super"))]
 const ROOT_CIRCUIT_SMALL_DEGREE: u32 = 24;
 
-pub async fn run_test() {
-    let mut evm: IntegrationTest<EvmCircuit<Fr>> =
-        IntegrationTest::new("EVM", EVM_CIRCUIT_DEGREE, ROOT_CIRCUIT_SMALL_DEGREE);
+#[cfg(feature = "super")]
+const SUPER_CIRCUIT_DEGREE: u32 = 20;
+#[cfg(feature = "super")]
+const ROOT_CIRCUIT_BIG_DEGREE: u32 = 26;
+
+pub async fn run_test<C>(name: &'static str)
+where
+    C: SubCircuit<Fr> + Circuit<Fr>,
+{
+    let (degree, root_degree) = {
+        #[cfg(not(feature = "super"))]
+        {
+            (EVM_CIRCUIT_DEGREE, ROOT_CIRCUIT_SMALL_DEGREE)
+        }
+        #[cfg(feature = "super")]
+        {
+            (SUPER_CIRCUIT_DEGREE, ROOT_CIRCUIT_BIG_DEGREE)
+        }
+    };
+    let mut evm: IntegrationTest<C> = IntegrationTest::new(name, degree, root_degree);
     // TODO: make this configurable
     test_pure_call(
         "0xffDb339065c91c88e8a3cC6857359B6c2FB78cf5"
@@ -56,14 +75,16 @@ pub async fn run_test() {
     .await;
 }
 
-async fn test_pure_call(
+async fn test_pure_call<C>(
     from: Address,
     to: Address,
     gas: u64,
     data: Vec<u8>,
     block_number: u64,
-    evm: &mut IntegrationTest<EvmCircuit<Fr>>,
-) {
+    evm: &mut IntegrationTest<C>,
+) where
+    C: SubCircuit<Fr> + Circuit<Fr>,
+{
     let params = TraceCallParams {
         from: format!("{:?}", from),
         to: format!("{:?}", to),

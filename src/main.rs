@@ -8,7 +8,7 @@ mod run;
 async fn main() {
     gen::types::log_init();
 
-    let (api, node_handle) = node::new_anvil_node().await;
+    let (_api, node_handle) = node::new_anvil_node().await;
 
     let endpoint = node_handle.http_endpoint();
     info!("Anvil endpoint is: {}", endpoint);
@@ -20,5 +20,16 @@ async fn main() {
     });
 
     gen::gen_block_data().await;
-    run::run_test().await;
+
+    #[cfg(not(feature = "super"))]
+    run::run_test::<zkevm_circuits::evm_circuit::EvmCircuit<halo2_proofs::halo2curves::bn256::Fr>>(
+        "EVM",
+    )
+    .await;
+
+    #[cfg(feature = "super")]
+    run::run_test::<
+        zkevm_circuits::super_circuit::SuperCircuit<halo2_proofs::halo2curves::bn256::Fr>,
+    >("Super")
+    .await;
 }
