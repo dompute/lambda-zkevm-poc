@@ -12,6 +12,9 @@ pub struct Opts {
 
     #[clap(short, long)]
     actual: Option<bool>,
+
+    #[clap(short, long)]
+    groth16_verifier: bool,
 }
 
 #[tokio::main]

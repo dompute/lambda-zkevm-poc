@@ -56,6 +56,81 @@ where
     call.tx
 }
 
+async fn gen_verify_call<M>(
+    deployments: &HashMap<String, (u64, Address)>,
+    blocks: &mut HashMap<String, u64>,
+    contracts: &HashMap<String, CompiledContract>,
+    prov: &Arc<M>,
+) where
+    M: Middleware,
+{
+    let contract_address = deployments
+        .get("Groth16Verifier")
+        .expect("contract not found")
+        .1;
+    let contract_abi = &contracts
+        .get("Groth16Verifier")
+        .expect("contract not found")
+        .abi;
+
+    let contract = Contract::new(contract_address, contract_abi.clone(), prov.clone());
+
+    let pa: [U256; 2] = [
+        "0x28da0fd7778f50c6136d2448f015faf1491ad8f869e5509c1309802feaa0b32f"
+            .parse()
+            .unwrap(),
+        "0x0e1c822477ba388fd90b7172e5088ba8e3c843bb3e7d370b7a57e1050f5daa8f"
+            .parse()
+            .unwrap(),
+    ];
+    let pb: [[U256; 2]; 2] = [
+        [
+            "0x01e68fa3d08c93f1098aea19aa134c90dc676050be6e81d12ebfb8a2eb8b1849"
+                .parse()
+                .unwrap(),
+            "0x07eccf490d162477bd89036355856aa70b1dbeb76c4484d2420e06f3928457ba"
+                .parse()
+                .unwrap(),
+        ],
+        [
+            "0x0add63e22690cb781fcf5f106fa441c3558e305fb5ea8ae2a7d1889b65d79f3f"
+                .parse()
+                .unwrap(),
+            "0x298a3d4d12b993972f7cd6cf3383cb43a0c8f7c95288952127e7fb411c4aa79a"
+                .parse()
+                .unwrap(),
+        ],
+    ];
+    let pc: [U256; 2] = [
+        "0x16c4818e0004b83596391aed769dfeae45e17187e531b9d47744bbdd29e6cf7c"
+            .parse()
+            .unwrap(),
+        "0x04334671d4cf8f42078c195b1e6f223e845622b3fc7904834496ef6390f0e5d9"
+            .parse()
+            .unwrap(),
+    ];
+    let pub_signals: [U256; 1] = [
+        "0x0000000000000000000000000000000000000000000000000000000000000021"
+            .parse()
+            .unwrap(),
+    ];
+    info!("@@ contract address: {:?}", contract.address());
+    let call: ContractCall<M, _> = contract
+        .method::<_, bool>("verifyProof", (pa, pb, pc, pub_signals))
+        .expect("cannot construct ERC20 transfer call");
+    // Set gas to avoid `eth_estimateGas` call
+    let call = call.legacy();
+    let call = call.gas(1_000_000);
+
+    let receipt = send_confirm_tx(prov, call.tx).await;
+    assert_eq!(receipt.status, Some(U64::from(1u64)));
+    blocks.insert(
+        "Groth16Verifier add successful".to_string(),
+        receipt.block_number.unwrap().as_u64(),
+    );
+    info!("Groth16Verifier add successfully");
+}
+
 async fn gen_calculation_call<M>(
     deployments: &HashMap<String, (u64, Address)>,
     blocks: &mut HashMap<String, u64>,
@@ -355,6 +430,9 @@ pub async fn gen_block_data() {
 
     // Calculation call
     gen_calculation_call(&deployments, &mut blocks, &contracts, &wallets[0]).await;
+
+    // Verification call
+    gen_verify_call(&deployments, &mut blocks, &contracts, &wallets[0]).await;
 
     let gen_data = GenDataOutput {
         coinbase: accounts[0],

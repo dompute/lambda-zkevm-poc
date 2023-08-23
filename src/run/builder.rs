@@ -10,6 +10,7 @@ use bus_mapping::{
 };
 use eth_types::{Address, ToWord, Word};
 use ethers::providers::JsonRpcClient;
+use log::debug;
 
 use super::rpc::{TraceCallParams, ZkGethClient};
 
@@ -167,22 +168,22 @@ impl<P: JsonRpcClient> ZkBuilderClient<P> {
     > {
         let (eth_block, geth_traces, history_hashes, prev_state_root) =
             self.get_block(params, block_num).await?;
-        println!("=== DBG 1 ===");
-        println!("eth_block: {:#?}", eth_block);
-        println!("geth_traces: {:#?}", geth_traces);
-        println!("history_hashes: {:#?}", history_hashes);
-        println!("prev_state_root: {:#?}", prev_state_root);
+        debug!("=== DBG 1 ===");
+        debug!("eth_block: {:#?}", eth_block);
+        debug!("geth_traces: {:#?}", geth_traces);
+        debug!("history_hashes: {:#?}", history_hashes);
+        debug!("prev_state_root: {:#?}", prev_state_root);
         let access_set = Self::get_state_accesses(&eth_block, &geth_traces)?;
-        println!("=== DBG 2 ===");
-        println!("access_set: {:#?}", access_set);
+        debug!("=== DBG 2 ===");
+        debug!("access_set: {:#?}", access_set);
         let (proofs, codes) = self.get_state(block_num, access_set).await?;
-        println!("=== DBG 3 ===");
-        println!("proofs: {:#?}", proofs);
-        println!("codes: {:#?}", codes);
+        debug!("=== DBG 3 ===");
+        debug!("proofs: {:#?}", proofs);
+        debug!("codes: {:#?}", codes);
         let (state_db, code_db) = Self::build_state_code_db(proofs, codes);
-        println!("=== DBG 4 ===");
-        println!("state_db: {:#?}", state_db);
-        println!("code_db: {:#?}", code_db);
+        debug!("=== DBG 4 ===");
+        debug!("state_db: {:#?}", state_db);
+        debug!("code_db: {:#?}", code_db);
         let builder = self.gen_inputs_from_state(
             state_db,
             code_db,
@@ -191,8 +192,8 @@ impl<P: JsonRpcClient> ZkBuilderClient<P> {
             history_hashes,
             prev_state_root,
         )?;
-        println!("=== DBG 5 ===");
-        println!("builder: {:#?}", builder);
+        debug!("=== DBG 5 ===");
+        debug!("builder: {:#?}", builder);
         Ok((builder, eth_block))
     }
 }

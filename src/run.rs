@@ -63,16 +63,44 @@ where
     };
 
     let mut it: IntegrationTest<C> = IntegrationTest::new(name, degree, root_degree);
-    // TODO: make this configurable
+    if opts.groth16_verifier {
+        test_groth16_verifier(opts, &mut it).await
+    } else {
+        test_calculation(opts, &mut it).await;
+    }
+}
+
+async fn test_groth16_verifier<C>(opts: &Opts, it: &mut IntegrationTest<C>)
+where
+    C: SubCircuit<Fr> + Circuit<Fr>,
+{
     test_pure_call(
         "0xffDb339065c91c88e8a3cC6857359B6c2FB78cf5"
             .parse()
             .unwrap(),
-						"0x79bdc88780158af4bd20b969da5173871713114e".parse().unwrap(),
-				100000,
-				hex::decode("771602f700000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003").unwrap(),
+		"0x357224ff702b88ac26a6deda1640face692adb96".parse().unwrap(),
+		1_000_000,
+		hex::decode(r#"43753b4d28da0fd7778f50c6136d2448f015faf1491ad8f869e5509c1309802feaa0b32f0e1c822477ba388fd90b7172e5088ba8e3c843bb3e7d370b7a57e1050f5daa8f01e68fa3d08c93f1098aea19aa134c90dc676050be6e81d12ebfb8a2eb8b184907eccf490d162477bd89036355856aa70b1dbeb76c4484d2420e06f3928457ba0add63e22690cb781fcf5f106fa441c3558e305fb5ea8ae2a7d1889b65d79f3f298a3d4d12b993972f7cd6cf3383cb43a0c8f7c95288952127e7fb411c4aa79a16c4818e0004b83596391aed769dfeae45e17187e531b9d47744bbdd29e6cf7c04334671d4cf8f42078c195b1e6f223e845622b3fc7904834496ef6390f0e5d90000000000000000000000000000000000000000000000000000000000000021"#).unwrap(),
+        7,
+        it, 
+        opts,
+    )
+    .await;
+}
+
+async fn test_calculation<C>(opts: &Opts, it: &mut IntegrationTest<C>)
+where
+    C: SubCircuit<Fr> + Circuit<Fr>,
+{
+    test_pure_call(
+        "0xffDb339065c91c88e8a3cC6857359B6c2FB78cf5"
+            .parse()
+            .unwrap(),
+		"0x79bdc88780158af4bd20b969da5173871713114e".parse().unwrap(),
+		100_000,
+		hex::decode(r#"771602f700000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003"#).unwrap(),
         6,
-        &mut it,
+        it,
         opts,
     )
     .await;
