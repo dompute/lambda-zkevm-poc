@@ -35,7 +35,7 @@ pub const CONTRACTS: &[(&str, &str)] = &[
     ("Groth16Verifier", "Circom/CircomVerifier.sol"),
 ];
 
-const GETH0_URL_DEFAULT: &str = "http://localhost:8545";
+const GETH0_URL_DEFAULT: &str = "http://localhost:8546";
 
 const PHRASE: &str =
     "work man father plunge mystery proud hollow address reunion sauce theory bonus";

@@ -27,3 +27,5 @@ bus-mapping = { path = "../zkevm-circuits/bus-mapping", features = ["test"] }
 eth-types = { path = "../zkevm-circuits/eth-types" }
 zkevm-circuits = { path = "../zkevm-circuits/zkevm-circuits" }
 mock = { path = "../zkevm-circuits/mock" }
+
+anvil = { path = "../foundry/anvil" }
