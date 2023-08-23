@@ -56,7 +56,7 @@ where
     call.tx
 }
 
-async fn gen_calculatioin_call<M>(
+async fn gen_calculation_call<M>(
     deployments: &HashMap<String, (u64, Address)>,
     blocks: &mut HashMap<String, u64>,
     contracts: &HashMap<String, CompiledContract>,
@@ -354,7 +354,7 @@ pub async fn gen_block_data() {
     .await;
 
     // Calculation call
-    gen_calculatioin_call(&deployments, &mut blocks, &contracts, &wallets[0]).await;
+    gen_calculation_call(&deployments, &mut blocks, &contracts, &wallets[0]).await;
 
     let gen_data = GenDataOutput {
         coinbase: accounts[0],

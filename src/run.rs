@@ -1,10 +1,7 @@
-use crate::node::new_anvil_node;
-
 use self::{circuit::IntegrationTest, rpc::TraceCallParams};
 use bus_mapping::circuit_input_builder::FixedCParams;
 use eth_types::Address;
 use halo2_proofs::halo2curves::bn256::Fr;
-use log::info;
 use zkevm_circuits::evm_circuit::EvmCircuit;
 
 pub mod builder;
