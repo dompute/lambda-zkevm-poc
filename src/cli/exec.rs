@@ -8,11 +8,11 @@ use crate::run;
 pub async fn match_operation(subcommand: &str, sub_matchs: &ArgMatches) {
     match subcommand {
         "prove" => {
-          let is_root = sub_matchs.get_flag("root");
-          let is_actual= sub_matchs.get_flag("actual");
-          let is_gv= sub_matchs.get_flag("gv");
-          exec_prove(is_root, is_actual, is_gv).await
-        },
+            let is_root = sub_matchs.get_flag("root");
+            let is_actual = sub_matchs.get_flag("actual");
+            let is_gv = sub_matchs.get_flag("gv");
+            exec_prove(is_root, is_actual, is_gv).await
+        }
         "verify" => exec_verify(),
         "dry-run" => exec_dry_run(),
         _ => println!("Unknown subcommand"),

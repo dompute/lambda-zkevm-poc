@@ -88,7 +88,7 @@ where
     .await;
 }
 
-async fn test_calculation<C>( it: &mut IntegrationTest<C>)
+async fn test_calculation<C>(it: &mut IntegrationTest<C>)
 where
     C: SubCircuit<Fr> + Circuit<Fr>,
 {
@@ -116,7 +116,6 @@ async fn test_pure_call<C>(
     it: &mut IntegrationTest<C>,
     is_root: bool,
     is_actual: bool,
-    
 ) where
     C: SubCircuit<Fr> + Circuit<Fr>,
 {

@@ -4,12 +4,12 @@
 
 Test pure function:
 ```
-cargo run --release
+cargo run --release -- prove
 ```
 
 Test circom verifier:
 ```
-cargo run --release -- -g
+cargo run --release -- prove -gv
 ```
 
 ## Dry run

@@ -1,7 +1,7 @@
-use clap::Parser;
-use log::info;
+
 use lambda_zkevm::cli::command;
 use lambda_zkevm::cli::exec;
+
 
 #[tokio::main]
 async fn main() {
