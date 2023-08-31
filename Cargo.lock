@@ -3268,6 +3268,38 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3f35c735096c0293d313e8f2a641627472b83d01b937177fe76e5e2708d31e0d"
 
 [[package]]
+name = "lambda-zkevm"
+version = "0.1.0"
+dependencies = [
+ "anvil",
+ "anyhow",
+ "bus-mapping",
+ "clap",
+ "env_logger",
+ "eth-types",
+ "ethers 2.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
+ "halo2_proofs",
+ "hex",
+ "lazy_static",
+ "log",
+ "mock",
+ "paste",
+ "pretty_assertions",
+ "rand_chacha 0.3.1",
+ "rand_core 0.6.4",
+ "rand_xorshift",
+ "revm-interpreter",
+ "revm-primitives",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "url",
+ "zkevm-circuits",
+]
+
+[[package]]
 name = "lazy_static"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6444,34 +6476,6 @@ dependencies = [
  "sha1",
  "time 0.3.25",
  "zstd",
-]
-
-[[package]]
-name = "zkbytecode_executor"
-version = "0.1.0"
-dependencies = [
- "anvil",
- "bus-mapping",
- "clap",
- "env_logger",
- "eth-types",
- "ethers 2.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
- "halo2_proofs",
- "hex",
- "lazy_static",
- "log",
- "mock",
- "paste",
- "pretty_assertions",
- "rand_chacha 0.3.1",
- "rand_core 0.6.4",
- "rand_xorshift",
- "serde",
- "serde_derive",
- "serde_json",
- "tokio",
- "url",
- "zkevm-circuits",
 ]
 
 [[package]]

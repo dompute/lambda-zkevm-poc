@@ -1,5 +1,4 @@
 use self::{circuit::IntegrationTest, rpc::TraceCallParams};
-use crate::Opts;
 use bus_mapping::circuit_input_builder::FixedCParams;
 use eth_types::Address;
 use halo2_proofs::{halo2curves::bn256::Fr, plonk::Circuit};
@@ -47,7 +46,7 @@ const SUPER_CIRCUIT_DEGREE: u32 = 20;
 #[cfg(feature = "super")]
 const ROOT_CIRCUIT_BIG_DEGREE: u32 = 26;
 
-pub async fn run_test<C>(name: &'static str, opts: &Opts)
+pub async fn run_test<C>(name: &'static str, is_root: bool, is_actual: bool, is_gv: bool)
 where
     C: SubCircuit<Fr> + Circuit<Fr>,
 {
@@ -63,14 +62,14 @@ where
     };
 
     let mut it: IntegrationTest<C> = IntegrationTest::new(name, degree, root_degree);
-    if opts.groth16_verifier {
-        test_groth16_verifier(opts, &mut it).await
+    if is_gv {
+        test_groth16_verifier(is_root, is_actual, &mut it).await
     } else {
-        test_calculation(opts, &mut it).await;
+        test_calculation(&mut it).await;
     }
 }
 
-async fn test_groth16_verifier<C>(opts: &Opts, it: &mut IntegrationTest<C>)
+async fn test_groth16_verifier<C>(is_root: bool, is_actual: bool, it: &mut IntegrationTest<C>)
 where
     C: SubCircuit<Fr> + Circuit<Fr>,
 {
@@ -83,12 +82,13 @@ where
 		hex::decode(r#"43753b4d28da0fd7778f50c6136d2448f015faf1491ad8f869e5509c1309802feaa0b32f0e1c822477ba388fd90b7172e5088ba8e3c843bb3e7d370b7a57e1050f5daa8f01e68fa3d08c93f1098aea19aa134c90dc676050be6e81d12ebfb8a2eb8b184907eccf490d162477bd89036355856aa70b1dbeb76c4484d2420e06f3928457ba0add63e22690cb781fcf5f106fa441c3558e305fb5ea8ae2a7d1889b65d79f3f298a3d4d12b993972f7cd6cf3383cb43a0c8f7c95288952127e7fb411c4aa79a16c4818e0004b83596391aed769dfeae45e17187e531b9d47744bbdd29e6cf7c04334671d4cf8f42078c195b1e6f223e845622b3fc7904834496ef6390f0e5d90000000000000000000000000000000000000000000000000000000000000021"#).unwrap(),
         7,
         it, 
-        opts,
+        is_root,
+        is_actual,
     )
     .await;
 }
 
-async fn test_calculation<C>(opts: &Opts, it: &mut IntegrationTest<C>)
+async fn test_calculation<C>( it: &mut IntegrationTest<C>)
 where
     C: SubCircuit<Fr> + Circuit<Fr>,
 {
@@ -101,7 +101,8 @@ where
 		hex::decode(r#"771602f700000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003"#).unwrap(),
         6,
         it,
-        opts,
+        false,
+        true
     )
     .await;
 }
@@ -113,7 +114,9 @@ async fn test_pure_call<C>(
     data: Vec<u8>,
     block_number: u64,
     it: &mut IntegrationTest<C>,
-    opts: &Opts,
+    is_root: bool,
+    is_actual: bool,
+    
 ) where
     C: SubCircuit<Fr> + Circuit<Fr>,
 {
@@ -127,8 +130,8 @@ async fn test_pure_call<C>(
         block_number,
         it.proof_name("PureCall"),
         &params,
-        opts.is_root(),
-        opts.is_actual(),
+        is_root,
+        is_actual,
     )
     .await;
 }
