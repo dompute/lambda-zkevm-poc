@@ -1,4 +1,3 @@
-
 use lambda_zkevm::cli::command;
 use lambda_zkevm::cli::exec;
 

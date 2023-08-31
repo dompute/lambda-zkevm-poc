@@ -1,4 +1,4 @@
-use clap::{Arg, ArgMatches, Command};
+use clap::{Arg, ArgMatches, Command, value_parser};
 
 pub fn parse_arguments<'a>() -> ArgMatches {
     Command::new("Lambda zkEVM")
@@ -8,9 +8,24 @@ pub fn parse_arguments<'a>() -> ArgMatches {
         .subcommand(
             Command::new("prove")
                 .about("Performs the 'prove' operation")
-                .arg(Arg::new("root").long("root").value_name("BOOL"))
-                .arg(Arg::new("actual").long("actual").value_name("BOOL"))
-                .arg(Arg::new("gv").long("groth16_verifier").value_name("BOOL")),
+                .arg(
+                    Arg::new("root")
+                        .long("root")
+                        .value_parser(value_parser!(bool))
+                        .action(clap::ArgAction::SetTrue)
+                )
+                .arg(
+                    Arg::new("actual")
+                        .long("actual")
+                        .value_parser(value_parser!(bool))
+                        .action(clap::ArgAction::SetTrue)
+                )
+                .arg(
+                    Arg::new("gv")
+                        .long("gv")
+                        .value_parser(value_parser!(bool))
+                        .action(clap::ArgAction::SetTrue)
+                ),
         )
         .subcommand(
             Command::new("verify")
@@ -25,9 +40,24 @@ pub fn parse_arguments<'a>() -> ArgMatches {
             Command::new("dry-run")
                 .about("Performs the 'dry-run' operation")
                 .arg(
-                    Arg::new("foo")
-                        .long("foo")
-                        .help("Specifies the value of foo"),
+                    Arg::new("calldata")
+                        .long("calldata")
+                        .value_parser(value_parser!(String))
+                        .action(clap::ArgAction::Set)
+                        .required(true)
+                )
+                .arg(
+                    Arg::new("bytecode")
+                        .long("bytecode")
+                        .value_parser(value_parser!(String))
+                        .action(clap::ArgAction::Set)
+                        .required(true)
+                )
+                .arg(
+                    Arg::new("file")
+                        .long("file")
+                        .value_parser(value_parser!(String))
+                        .action(clap::ArgAction::Set)
                 ),
         )
         .get_matches()

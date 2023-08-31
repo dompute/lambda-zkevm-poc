@@ -1,11 +1,8 @@
-use dummy::*;
+use crate::dry_run::dummy::*;
+use crate::dry_run::error::{Error, Result};
+
 use revm_interpreter::{return_ok, CallContext, Contract, InstructionResult, Interpreter};
 use revm_primitives::{Bytecode, BytecodeState};
-
-mod dummy;
-mod error;
-
-pub use error::{Error, Result};
 
 pub fn bytecode_run(calldata: Vec<u8>, bytecode: Vec<u8>) -> Result<Vec<u8>> {
     let call_context = CallContext::default();
@@ -18,7 +15,7 @@ pub fn bytecode_run(calldata: Vec<u8>, bytecode: Vec<u8>) -> Result<Vec<u8>> {
     let contract = Contract::new_with_context(calldata.into(), bytecode, &call_context);
     let mut interpreter = Interpreter::new(contract, u64::MAX, false);
 
-    let mut host = dummy::DummyHost::default();
+    let mut host = DummyHost::default();
     let result = interpreter.run::<_, DummySpec>(&mut host);
 
     if matches!(result, return_ok!()) {
