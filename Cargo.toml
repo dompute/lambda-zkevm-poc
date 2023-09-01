@@ -30,12 +30,11 @@ thiserror = "1.0"
 revm-interpreter = "1.1.2"
 revm-primitives = "1.1.2"
 
-bus-mapping = { path = "../zkevm-circuits/bus-mapping", features = ["test"] }
-eth-types = { path = "../zkevm-circuits/eth-types" }
-zkevm-circuits = { path = "../zkevm-circuits/zkevm-circuits" }
-mock = { path = "../zkevm-circuits/mock" }
-
-anvil = { path = "../foundry/anvil" }
+bus-mapping = { git = "https://github.com/dompute/zkevm-circuits.git", branch = "bytecode" }
+eth-types = { git = "https://github.com/dompute/zkevm-circuits.git", branch = "bytecode" }
+zkevm-circuits = { git = "https://github.com/dompute/zkevm-circuits.git", branch = "bytecode" }
+mock = { git = "https://github.com/dompute/zkevm-circuits.git", branch = "bytecode" }
+anvil = { git = "https://github.com/dompute/foundry.git", branch = "bytecode" }
 
 [features]
 super = []

@@ -147,6 +147,7 @@ dependencies = [
 [[package]]
 name = "anvil"
 version = "0.1.0"
+source = "git+https://github.com/dompute/foundry.git?branch=bytecode#2d87c0c2fcc47088feecc72721c46d8e07e3c220"
 dependencies = [
  "anvil-core",
  "anvil-rpc",
@@ -191,6 +192,7 @@ dependencies = [
 [[package]]
 name = "anvil-core"
 version = "0.1.0"
+source = "git+https://github.com/dompute/foundry.git?branch=bytecode#2d87c0c2fcc47088feecc72721c46d8e07e3c220"
 dependencies = [
  "bytes",
  "ethers-core 2.0.8 (git+https://github.com/gakonst/ethers-rs)",
@@ -209,6 +211,7 @@ dependencies = [
 [[package]]
 name = "anvil-rpc"
 version = "0.1.0"
+source = "git+https://github.com/dompute/foundry.git?branch=bytecode#2d87c0c2fcc47088feecc72721c46d8e07e3c220"
 dependencies = [
  "serde",
  "serde_json",
@@ -217,6 +220,7 @@ dependencies = [
 [[package]]
 name = "anvil-server"
 version = "0.1.0"
+source = "git+https://github.com/dompute/foundry.git?branch=bytecode#2d87c0c2fcc47088feecc72721c46d8e07e3c220"
 dependencies = [
  "anvil-rpc",
  "async-trait",
@@ -703,6 +707,7 @@ checksum = "a3e2c3daef883ecc1b5d58c15adae93470a91d425f3532ba1695849656af3fc1"
 [[package]]
 name = "bus-mapping"
 version = "0.1.0"
+source = "git+https://github.com/dompute/zkevm-circuits.git?branch=bytecode#f479edb7b80edf3850f9d7790fc492b570f7337c"
 dependencies = [
  "eth-types",
  "ethers-core 2.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -712,7 +717,6 @@ dependencies = [
  "itertools",
  "lazy_static",
  "log",
- "mock",
  "revm-precompile",
  "serde",
  "serde_json",
@@ -1547,6 +1551,7 @@ dependencies = [
 [[package]]
 name = "eth-types"
 version = "0.1.0"
+source = "git+https://github.com/dompute/zkevm-circuits.git?branch=bytecode#f479edb7b80edf3850f9d7790fc492b570f7337c"
 dependencies = [
  "ethers-core 2.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "ethers-signers 2.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -2121,6 +2126,7 @@ dependencies = [
 [[package]]
 name = "external-tracer"
 version = "0.1.0"
+source = "git+https://github.com/dompute/zkevm-circuits.git?branch=bytecode#f479edb7b80edf3850f9d7790fc492b570f7337c"
 dependencies = [
  "eth-types",
  "geth-utils",
@@ -2239,6 +2245,7 @@ checksum = "3f9eec918d3f24069decb9af1554cad7c880e2da24a9afd88aca000531ab82c1"
 [[package]]
 name = "forge"
 version = "0.2.0"
+source = "git+https://github.com/dompute/foundry.git?branch=bytecode#2d87c0c2fcc47088feecc72721c46d8e07e3c220"
 dependencies = [
  "comfy-table",
  "ethers 2.0.8 (git+https://github.com/gakonst/ethers-rs)",
@@ -2267,6 +2274,7 @@ dependencies = [
 [[package]]
 name = "forge-fmt"
 version = "0.2.0"
+source = "git+https://github.com/dompute/foundry.git?branch=bytecode#2d87c0c2fcc47088feecc72721c46d8e07e3c220"
 dependencies = [
  "ariadne",
  "ethers-core 2.0.8 (git+https://github.com/gakonst/ethers-rs)",
@@ -2290,6 +2298,7 @@ dependencies = [
 [[package]]
 name = "foundry-abi"
 version = "0.1.0"
+source = "git+https://github.com/dompute/foundry.git?branch=bytecode#2d87c0c2fcc47088feecc72721c46d8e07e3c220"
 dependencies = [
  "ethers-contract 2.0.8 (git+https://github.com/gakonst/ethers-rs)",
  "ethers-contract-abigen 2.0.8 (git+https://github.com/gakonst/ethers-rs)",
@@ -2303,6 +2312,7 @@ dependencies = [
 [[package]]
 name = "foundry-common"
 version = "0.1.0"
+source = "git+https://github.com/dompute/foundry.git?branch=bytecode#2d87c0c2fcc47088feecc72721c46d8e07e3c220"
 dependencies = [
  "auto_impl",
  "clap",
@@ -2333,6 +2343,7 @@ dependencies = [
 [[package]]
 name = "foundry-config"
 version = "0.2.0"
+source = "git+https://github.com/dompute/foundry.git?branch=bytecode#2d87c0c2fcc47088feecc72721c46d8e07e3c220"
 dependencies = [
  "Inflector",
  "dirs-next",
@@ -2362,6 +2373,7 @@ dependencies = [
 [[package]]
 name = "foundry-evm"
 version = "0.2.0"
+source = "git+https://github.com/dompute/foundry.git?branch=bytecode#2d87c0c2fcc47088feecc72721c46d8e07e3c220"
 dependencies = [
  "auto_impl",
  "bytes",
@@ -2396,6 +2408,7 @@ dependencies = [
 [[package]]
 name = "foundry-macros"
 version = "0.2.0"
+source = "git+https://github.com/dompute/foundry.git?branch=bytecode#2d87c0c2fcc47088feecc72721c46d8e07e3c220"
 dependencies = [
  "ethers-core 2.0.8 (git+https://github.com/gakonst/ethers-rs)",
  "foundry-macros-impl",
@@ -2406,6 +2419,7 @@ dependencies = [
 [[package]]
 name = "foundry-macros-impl"
 version = "0.0.0"
+source = "git+https://github.com/dompute/foundry.git?branch=bytecode#2d87c0c2fcc47088feecc72721c46d8e07e3c220"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2415,6 +2429,7 @@ dependencies = [
 [[package]]
 name = "foundry-utils"
 version = "0.2.0"
+source = "git+https://github.com/dompute/foundry.git?branch=bytecode#2d87c0c2fcc47088feecc72721c46d8e07e3c220"
 dependencies = [
  "dunce",
  "ethers-addressbook 2.0.8 (git+https://github.com/gakonst/ethers-rs)",
@@ -2576,6 +2591,7 @@ dependencies = [
 [[package]]
 name = "gadgets"
 version = "0.1.0"
+source = "git+https://github.com/dompute/zkevm-circuits.git?branch=bytecode#f479edb7b80edf3850f9d7790fc492b570f7337c"
 dependencies = [
  "digest 0.7.6",
  "eth-types",
@@ -2607,6 +2623,7 @@ dependencies = [
 [[package]]
 name = "geth-utils"
 version = "0.1.0"
+source = "git+https://github.com/dompute/zkevm-circuits.git?branch=bytecode#f479edb7b80edf3850f9d7790fc492b570f7337c"
 dependencies = [
  "env_logger",
  "gobuild",
@@ -3525,6 +3542,7 @@ dependencies = [
 [[package]]
 name = "mock"
 version = "0.1.0"
+source = "git+https://github.com/dompute/zkevm-circuits.git?branch=bytecode#f479edb7b80edf3850f9d7790fc492b570f7337c"
 dependencies = [
  "eth-types",
  "ethers-core 2.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -6481,6 +6499,7 @@ dependencies = [
 [[package]]
 name = "zkevm-circuits"
 version = "0.1.0"
+source = "git+https://github.com/dompute/zkevm-circuits.git?branch=bytecode#f479edb7b80edf3850f9d7790fc492b570f7337c"
 dependencies = [
  "array-init 2.1.0",
  "bus-mapping",

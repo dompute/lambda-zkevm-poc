@@ -4,7 +4,6 @@ use std::{
 };
 use clap::ArgMatches;
 use log::info;
-use anyhow::anyhow;
 
 use crate::dry_run::bytecode_run::bytecode_run;
 use crate::gen;
@@ -63,7 +62,7 @@ pub fn exec_verify() {
     println!("Performing 'verify' operation ")
 }
 
-pub fn exec_dry_run(calldata: &str, bytecode: &str, file: Option<&String>) {
+pub fn exec_dry_run(calldata: &str, bytecode: &str, _file: Option<&String>) {
     // let (calldata, bytecode) = if file.is_some() {
     //     read_from_file(file.unwrap()).unwrap();
     // } else {
@@ -90,7 +89,7 @@ fn convert(calldata: &str, bytecode: &str) -> anyhow::Result<(Vec<u8>, Vec<u8>)>
     ))
 }
 
-fn read_from_file(file: &str) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
+fn _read_from_file(file: &str) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
     let file = File::open(file)?;
     let mut reader = BufReader::new(file);
 
