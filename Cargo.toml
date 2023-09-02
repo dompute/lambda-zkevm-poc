@@ -38,3 +38,6 @@ anvil = { git = "https://github.com/dompute/foundry.git", branch = "bytecode" }
 
 [features]
 super = []
+
+[patch."https://github.com/privacy-scaling-explorations/halo2.git"]
+halo2_proofs = { path = "../../privacy-scaling-explorations/halo2/halo2_proofs/" }
