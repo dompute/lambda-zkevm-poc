@@ -1,4 +1,4 @@
-use clap::{Arg, ArgMatches, Command, value_parser};
+use clap::{value_parser, Arg, ArgMatches, Command};
 
 pub fn parse_arguments<'a>() -> ArgMatches {
     Command::new("Lambda zkEVM")
@@ -12,19 +12,19 @@ pub fn parse_arguments<'a>() -> ArgMatches {
                     Arg::new("root")
                         .long("root")
                         .value_parser(value_parser!(bool))
-                        .action(clap::ArgAction::SetTrue)
+                        .action(clap::ArgAction::SetTrue),
                 )
                 .arg(
                     Arg::new("actual")
                         .long("actual")
                         .value_parser(value_parser!(bool))
-                        .action(clap::ArgAction::SetTrue)
+                        .action(clap::ArgAction::SetTrue),
                 )
                 .arg(
                     Arg::new("gv")
                         .long("gv")
                         .value_parser(value_parser!(bool))
-                        .action(clap::ArgAction::SetTrue)
+                        .action(clap::ArgAction::SetTrue),
                 ),
         )
         .subcommand(
@@ -43,21 +43,19 @@ pub fn parse_arguments<'a>() -> ArgMatches {
                     Arg::new("calldata")
                         .long("calldata")
                         .value_parser(value_parser!(String))
-                        .action(clap::ArgAction::Set)
-                        .required(true)
+                        .action(clap::ArgAction::Set),
                 )
                 .arg(
                     Arg::new("bytecode")
                         .long("bytecode")
                         .value_parser(value_parser!(String))
-                        .action(clap::ArgAction::Set)
-                        .required(true)
+                        .action(clap::ArgAction::Set),
                 )
                 .arg(
                     Arg::new("file")
                         .long("file")
                         .value_parser(value_parser!(String))
-                        .action(clap::ArgAction::Set)
+                        .action(clap::ArgAction::Set),
                 ),
         )
         .get_matches()
