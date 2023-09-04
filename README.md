@@ -9,14 +9,18 @@ cargo run --release -- prove
 
 Test circom verifier:
 ```
-cargo run --release -- prove --gv
+cargo run --release -- prove --actual --gv
 ```
 
+Test super circuit:
+```
+cargo run --release --features super -- prove --actual --gv
+```
 ## Dry run
 
 Sepcify a file like the following:
 ```
-cargo run --release -- -f data/basic-token.code
+cargo run --release -- dry-run --file data/basic-token.code
 ```
 
 Or specify calldata and bytecode like:
