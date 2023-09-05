@@ -37,7 +37,9 @@ mock = { git = "https://github.com/dompute/zkevm-circuits.git", branch = "byteco
 anvil = { git = "https://github.com/dompute/foundry.git", branch = "bytecode" }
 
 [features]
+cuda = ["halo2_proofs/cuda"]
+profile = ["halo2_proofs/profile"]
 super = []
 
 [patch."https://github.com/privacy-scaling-explorations/halo2.git"]
-halo2_proofs = { path = "../../privacy-scaling-explorations/halo2/halo2_proofs/" }
+halo2_proofs = { path = "../halo2/halo2_proofs/" }

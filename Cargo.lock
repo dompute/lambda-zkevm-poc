@@ -2151,6 +2151,7 @@ dependencies = [
  "cc",
  "ff",
  "group",
+ "halo2curves",
  "rayon",
  "serde",
 ]
