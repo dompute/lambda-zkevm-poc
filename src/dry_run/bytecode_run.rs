@@ -1,8 +1,13 @@
 use crate::dry_run::dummy::*;
 use crate::dry_run::error::{Error, Result};
 
+use revm::inspectors::NoOpInspector;
+use revm::InMemoryDB;
 use revm_interpreter::{return_ok, CallContext, Contract, InstructionResult, Interpreter};
-use revm_primitives::{Bytecode, BytecodeState};
+use revm_precompile::Precompiles;
+use revm_primitives::{Bytecode, BytecodeState, Env};
+
+use super::dummy;
 
 pub fn bytecode_run(calldata: Vec<u8>, bytecode: Vec<u8>) -> Result<Vec<u8>> {
     let call_context = CallContext::default();
@@ -15,7 +20,15 @@ pub fn bytecode_run(calldata: Vec<u8>, bytecode: Vec<u8>) -> Result<Vec<u8>> {
     let contract = Contract::new_with_context(calldata.into(), bytecode, &call_context);
     let mut interpreter = Interpreter::new(contract, u64::MAX, false);
 
-    let mut host = DummyHost::default();
+    let mut noop = NoOpInspector {};
+    let mut db = InMemoryDB::default();
+    let mut env = Env::default();
+    let mut host: dummy::DummyHost<'_, DummySpec, _, false> = dummy::DummyHost::new(
+        &mut db,
+        &mut env,
+        &mut noop,
+        Precompiles::new(revm_precompile::SpecId::LATEST).clone(),
+    );
     let result = interpreter.run::<_, DummySpec>(&mut host);
 
     if matches!(result, return_ok!()) {
