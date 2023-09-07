@@ -54,7 +54,7 @@ mod tests {
         // call pure function `add(uint256, uint256)` with params 2 and 3
         let calldata = hex::decode("771602f700000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003").unwrap();
 
-        let result = bytecode_run(calldata, bytecode);
+        let result = bytecode_run(calldata, bytecode, None);
         assert!(result.is_ok());
         // 2 + 3 = 5
         assert_eq!(
