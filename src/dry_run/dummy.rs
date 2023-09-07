@@ -18,7 +18,6 @@ use revm_primitives::{
 
 pub(crate) struct DummyHost<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> {
     pub storage: HashMap<U256, U256>,
-    pub transient_storage: HashMap<U256, U256>,
     data: EVMData<'a, DB>,
     inspector: &'a mut dyn Inspector<DB>,
     _phantomdata: PhantomData<GSPEC>,
@@ -60,7 +59,6 @@ impl<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> DummyHost<'a, GSPEC, DB
             },
             inspector,
             storage: HashMap::new(),
-            transient_storage: Default::default(),
             _phantomdata: PhantomData {},
         }
     }
@@ -251,15 +249,20 @@ impl<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> Host
     }
 
     fn code(&mut self, address: B160) -> Option<(Bytecode, bool)> {
-        let journal = &mut self.data.journaled_state;
-        let db = &mut self.data.db;
-        let error = &mut self.data.error;
+        // let journal = &mut self.data.journaled_state;
+        // let db = &mut self.data.db;
+        // let error = &mut self.data.error;
 
-        let (acc, is_cold) = journal
-            .load_code(address, db)
-            .map_err(|e| *error = Some(e))
-            .ok()?;
-        Some((acc.info.code.clone().unwrap(), is_cold))
+        // let (acc, is_cold) = journal
+        //     .load_code(address, db)
+        //     .map_err(|e| *error = Some(e))
+        //     .ok()?;
+        // Some((acc.info.code.clone().unwrap(), is_cold))
+        let code = "6080604052348015600f57600080fd5b506004361060325760003560e01c8063771602f7146037578063b67d77c5146058575b600080fd5b604660423660046084565b6067565b60405190815260200160405180910390f35b604660633660046084565b607a565b60006071828460bb565b90505b92915050565b60006071828460cb565b60008060408385031215609657600080fd5b50508035926020909101359150565b634e487b7160e01b600052601160045260246000fd5b80820180821115607457607460a5565b81810381811115607457607460a556fea26469706673582212208f7627a0343d693f54a14d507c91526e0b24fcd95c47bb1811e3bc00568cb4a064736f6c63430008150033000000000000000000000000000000000000000000000000000000000000000000";
+        let data: Vec<u8> = hex::decode(code).unwrap();
+        let bytes = Bytes::from(data);
+        let bytecode: Bytecode = Bytecode::new_raw(bytes);
+        Some((bytecode, false))
     }
 
     fn code_hash(&mut self, __address: B160) -> Option<(B256, bool)> {
