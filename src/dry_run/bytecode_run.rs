@@ -9,7 +9,11 @@ use revm_primitives::{Bytecode, BytecodeState, Env};
 
 use super::dummy;
 
-pub fn bytecode_run(calldata: Vec<u8>, bytecode: Vec<u8>) -> Result<Vec<u8>> {
+pub fn bytecode_run(
+    calldata: Vec<u8>,
+    bytecode: Vec<u8>,
+    hardcode: Option<Vec<u8>>,
+) -> Result<Vec<u8>> {
     let call_context = CallContext::default();
     let bytecode = Bytecode {
         bytecode: bytecode.into(),
@@ -27,6 +31,7 @@ pub fn bytecode_run(calldata: Vec<u8>, bytecode: Vec<u8>) -> Result<Vec<u8>> {
         &mut db,
         &mut env,
         &mut noop,
+        hardcode,
         Precompiles::new(revm_precompile::SpecId::LATEST).clone(),
     );
     let result = interpreter.run::<_, DummySpec>(&mut host);

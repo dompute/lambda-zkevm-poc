@@ -42,12 +42,21 @@ pub fn parse_arguments<'a>() -> ArgMatches {
                 .arg(
                     Arg::new("calldata")
                         .long("calldata")
+                        .short('c')
                         .value_parser(value_parser!(String))
                         .action(clap::ArgAction::Set),
                 )
                 .arg(
                     Arg::new("bytecode")
                         .long("bytecode")
+                        .short('b')
+                        .value_parser(value_parser!(String))
+                        .action(clap::ArgAction::Set),
+                )
+                .arg(
+                    Arg::new("hardcode")
+                        .long("hardcode")
+                        .short('d')
                         .value_parser(value_parser!(String))
                         .action(clap::ArgAction::Set),
                 )

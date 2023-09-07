@@ -20,6 +20,7 @@ pub(crate) struct DummyHost<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> 
     pub storage: HashMap<U256, U256>,
     data: EVMData<'a, DB>,
     inspector: &'a mut dyn Inspector<DB>,
+    hardcode: Option<Vec<u8>>,
     _phantomdata: PhantomData<GSPEC>,
 }
 
@@ -42,6 +43,7 @@ impl<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> DummyHost<'a, GSPEC, DB
         db: &'a mut DB,
         env: &'a mut Env,
         inspector: &'a mut dyn Inspector<DB>,
+        hardcode: Option<Vec<u8>>,
         precompiles: Precompiles,
     ) -> Self {
         let journaled_state = if GSPEC::enabled(SpecId::SPURIOUS_DRAGON) {
@@ -59,6 +61,7 @@ impl<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> DummyHost<'a, GSPEC, DB
             },
             inspector,
             storage: HashMap::new(),
+            hardcode,
             _phantomdata: PhantomData {},
         }
     }
@@ -219,14 +222,14 @@ impl<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> DummyHost<'a, GSPEC, DB
 impl<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> Host
     for DummyHost<'a, GSPEC, DB, INSPECT>
 {
-    fn step(&mut self, _interp: &mut Interpreter, is_static: bool) -> InstructionResult {
+    fn step(&mut self, _interp: &mut Interpreter, _is_static: bool) -> InstructionResult {
         InstructionResult::Continue
     }
 
     fn step_end(
         &mut self,
         _interp: &mut Interpreter,
-        is_static: bool,
+        _is_static: bool,
         _ret: InstructionResult,
     ) -> InstructionResult {
         InstructionResult::Continue
@@ -249,20 +252,22 @@ impl<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> Host
     }
 
     fn code(&mut self, address: B160) -> Option<(Bytecode, bool)> {
-        // let journal = &mut self.data.journaled_state;
-        // let db = &mut self.data.db;
-        // let error = &mut self.data.error;
+        if self.hardcode.is_some() {
+            return Some((
+                Bytecode::new_raw(Bytes::from(self.hardcode.clone().unwrap())),
+                false,
+            ));
+        }
 
-        // let (acc, is_cold) = journal
-        //     .load_code(address, db)
-        //     .map_err(|e| *error = Some(e))
-        //     .ok()?;
-        // Some((acc.info.code.clone().unwrap(), is_cold))
-        let code = "6080604052348015600f57600080fd5b506004361060325760003560e01c8063771602f7146037578063b67d77c5146058575b600080fd5b604660423660046084565b6067565b60405190815260200160405180910390f35b604660633660046084565b607a565b60006071828460bb565b90505b92915050565b60006071828460cb565b60008060408385031215609657600080fd5b50508035926020909101359150565b634e487b7160e01b600052601160045260246000fd5b80820180821115607457607460a5565b81810381811115607457607460a556fea26469706673582212208f7627a0343d693f54a14d507c91526e0b24fcd95c47bb1811e3bc00568cb4a064736f6c63430008150033000000000000000000000000000000000000000000000000000000000000000000";
-        let data: Vec<u8> = hex::decode(code).unwrap();
-        let bytes = Bytes::from(data);
-        let bytecode: Bytecode = Bytecode::new_raw(bytes);
-        Some((bytecode, false))
+        let journal = &mut self.data.journaled_state;
+        let db = &mut self.data.db;
+        let error = &mut self.data.error;
+
+        let (acc, is_cold) = journal
+            .load_code(address, db)
+            .map_err(|e| *error = Some(e))
+            .ok()?;
+        Some((acc.info.code.clone().unwrap(), is_cold))
     }
 
     fn code_hash(&mut self, __address: B160) -> Option<(B256, bool)> {
@@ -296,7 +301,7 @@ impl<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> Host
         Some((U256::ZERO, present, value, is_cold))
     }
 
-    fn log(&mut self, address: B160, topics: Vec<B256>, data: Bytes) {
+    fn log(&mut self, _address: B160, _topics: Vec<B256>, _data: Bytes) {
         println!("log")
     }
 

@@ -21,10 +21,13 @@ pub async fn match_operation(subcommand: &str, sub_matchs: &ArgMatches) {
         }
         "verify" => exec_verify(),
         "dry-run" => {
-            let calldata = sub_matchs.get_one::<String>("calldata");
-            let bytecode = sub_matchs.get_one::<String>("bytecode");
+            let calldata = sub_matchs.get_one::<String>("calldata").map(|s| s.as_str());
+            let bytecode = sub_matchs.get_one::<String>("bytecode").map(|s| s.as_str());
+            let hardcode = sub_matchs.get_one::<String>("hardcode");
+            let hardcode_as_str: Option<&str> = hardcode.map_or_else(|| None, |s| Some(s.as_str()));
+
             let file = sub_matchs.get_one::<String>("file");
-            exec_dry_run(calldata, bytecode, file);
+            exec_dry_run(calldata, bytecode, hardcode_as_str, file);
         }
         _ => println!("Unknown subcommand"),
     }
@@ -62,18 +65,24 @@ pub fn exec_verify() {
     println!("Performing 'verify' operation ")
 }
 
-pub fn exec_dry_run(calldata: Option<&String>, bytecode: Option<&String>, file: Option<&String>) {
-    let (calldata, bytecode) = if file.is_some() {
+pub fn exec_dry_run(
+    calldata: Option<&str>,
+    bytecode: Option<&str>,
+    hardcode: Option<&str>,
+    file: Option<&String>,
+) {
+    let (calldata, bytecode, hardcode) = if file.is_some() {
         read_from_file(file.unwrap()).unwrap()
     } else {
         parse_from_args(
             calldata.expect("should have calldata"),
             bytecode.expect("should have bytecode"),
+            hardcode,
         )
         .unwrap()
     };
 
-    match bytecode_run(calldata, bytecode) {
+    match bytecode_run(calldata, bytecode, hardcode) {
         Ok(r) => {
             println!(
                 "Bytecode exec successfully, result (in hex):\n{}",
@@ -86,24 +95,45 @@ pub fn exec_dry_run(calldata: Option<&String>, bytecode: Option<&String>, file: 
     };
 }
 
-fn convert(calldata: &str, bytecode: &str) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
+fn convert(
+    calldata: &str,
+    bytecode: &str,
+    hardcode: Option<&str>,
+) -> anyhow::Result<(Vec<u8>, Vec<u8>, Option<Vec<u8>>)> {
     Ok((
         hex::decode(calldata.trim_start_matches("0x"))?,
         hex::decode(bytecode.trim_start_matches("0x"))?,
+        hardcode.map_or(Ok(None), |h| {
+            hex::decode(h.trim_start_matches("0x")).map(Some)
+        })?,
     ))
 }
 
-fn read_from_file(file: &str) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
+fn read_from_file(file: &str) -> anyhow::Result<(Vec<u8>, Vec<u8>, Option<Vec<u8>>)> {
     let file = File::open(file)?;
     let mut reader = BufReader::new(file);
 
     let mut calldata = String::new();
     let mut bytecode = String::new();
+    let mut hardcode = String::new();
     reader.read_line(&mut calldata)?;
     reader.read_line(&mut bytecode)?;
-    convert(&calldata.trim_end(), &bytecode.trim_end())
+
+    if reader.read_line(&mut hardcode)? == 0 {
+        return convert(&calldata.trim_end(), &bytecode.trim_end(), None);
+    }
+
+    convert(
+        &calldata.trim_end(),
+        &bytecode.trim_end(),
+        Some(&hardcode.trim_end()),
+    )
 }
 
-fn parse_from_args(calldata: &str, bytecode: &str) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
-    convert(calldata, bytecode)
+fn parse_from_args(
+    calldata: &str,
+    bytecode: &str,
+    hardcode: Option<&str>,
+) -> anyhow::Result<(Vec<u8>, Vec<u8>, Option<Vec<u8>>)> {
+    convert(calldata, bytecode, hardcode)
 }
