@@ -1,20 +1,15 @@
 # lambda-zkevm
 
-## Single Prove
+## Prove & Verify
 
-Test pure function:
+Run prove with default prove and verify:
 ```
-cargo run --release -- prove
-```
-
-Test circom verifier:
-```
-cargo run --release -- prove --actual --gv
+cargo run --release -- run
 ```
 
-Test super circuit:
+Run prove with default mock prove and verify:
 ```
-cargo run --release --features super -- prove --actual --gv
+cargo run --release -- run --mock
 ```
 ## Dry run
 
