@@ -21,7 +21,7 @@ revm-primitives = "1.1.2"
 chrono = "0.4.23"
 
 halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2.git", tag = "v2023_02_02" }
-prover = { git = "https://github.com/scroll-tech/zkevm-circuits.git", rev = "cd69884", default-features = false, features = [
+prover = { git = "https://github.com/dompute/zkevm-circuits.git", branch = "lambda-zkevm", default-features = false, features = [
 	"parallel_syn",
 	"scroll",
 	"shanghai",
