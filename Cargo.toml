@@ -8,20 +8,9 @@ name = "lambda-zkevm"
 path = "src/cli/main.rs"
 
 [dependencies]
-lazy_static = "1.4"
-serde = "1.0"
-serde_json = { version = "1.0.66", features = ["unbounded_depth"] }
-serde_derive = "1.0"
-ethers = { version = "2.0.7", features = ["ethers-solc"] }
 tokio = { version = "1.13", features = ["macros", "rt-multi-thread"] }
-url = "2.2.2"
-pretty_assertions = "1.0.0"
 log = "0.4.14"
 env_logger = "0.9"
-halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2.git", tag = "v2023_04_20" }
-rand_chacha = "0.3"
-paste = "1.0"
-rand_xorshift = "0.3.0"
 rand_core = "0.6.4"
 hex = "0.4.3"
 clap = "4.3"
@@ -29,12 +18,6 @@ anyhow = "1.0"
 thiserror = "1.0"
 revm-interpreter = "1.1.2"
 revm-primitives = "1.1.2"
-
-bus-mapping = { git = "https://github.com/dompute/zkevm-circuits.git", rev = "37d260808a1f2f6071c88547b8f2c67cfe18e2f0" }
-eth-types = { git = "https://github.com/dompute/zkevm-circuits.git", rev = "37d260808a1f2f6071c88547b8f2c67cfe18e2f0" }
-zkevm-circuits = { git = "https://github.com/dompute/zkevm-circuits.git", rev = "37d260808a1f2f6071c88547b8f2c67cfe18e2f0" }
-mock = { git = "https://github.com/dompute/zkevm-circuits.git", rev = "37d260808a1f2f6071c88547b8f2c67cfe18e2f0" }
-anvil = { git = "https://github.com/dompute/foundry.git", branch = "bytecode" }
 
 [features]
 super = []
