@@ -16,9 +16,9 @@ cargo run --release -- run --trace-path <your/trace/path>
 
 Run prove with default mock prove and verify:
 ```
-cargo run --release -- run --mock --trace-path contracts/Circom/new_circom.json
+cargo run --release -- run --mock --trace-path traces/groth16_verification.json
 ```
-if not set `--trace-path` will use `contracts/Calculation/new_calculation.json` as default.
+if not set `--trace-path` will use `traces/calculation.json` as default.
 
 Or look at the help:
 ```

@@ -20,7 +20,7 @@ pub struct RunArgs {
     #[arg(
         long,
         env = "TRACE_PATH",
-        default_value = "./contracts/Calculation/new_calculation.json"
+        default_value = "./traces/calculation.json"
     )]
     pub trace_path: Vec<String>,
 
