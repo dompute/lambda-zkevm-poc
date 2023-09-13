@@ -1,3 +1,5 @@
 /target
 gendata_output.json
 integration_output*
+output
+test_params

@@ -2294,6 +2294,7 @@ name = "lambda-zkevm"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "chrono",
  "clap",
  "env_logger 0.9.3",
  "glob",

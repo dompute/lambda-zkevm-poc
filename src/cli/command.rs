@@ -16,6 +16,31 @@ pub enum Commands {
 pub struct RunArgs {
     #[arg(long)]
     pub mock: bool,
+
+    #[arg(
+        long,
+        env = "TRACE_PATH",
+        default_value = "./contracts/Calculation/new_calculation.json"
+    )]
+    pub trace_path: Vec<String>,
+
+    #[arg(long)]
+    pub batch_dir: Option<String>,
+
+    #[arg(long, default_value = "output")]
+    pub output_dir: String,
+
+    #[arg(long, default_value = "vk_chunk_0.vkey")]
+    pub chunk_vk_filename: String,
+
+    #[arg(long, default_value = "./test_params")]
+    pub chunk_params_dir: String,
+
+    #[arg(long, default_value = "./test_assets")]
+    pub chunk_assets_dir: String,
+
+    #[arg(long, default_value = "./configs")]
+    pub scroll_prover_assets_dir: String,
 }
 
 #[derive(Args)]

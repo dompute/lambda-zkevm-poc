@@ -1,4 +1,3 @@
-use super::PARAMS_DIR;
 use prover::{
     aggregator::{Prover, Verifier},
     common,
@@ -7,7 +6,12 @@ use prover::{
 };
 use std::env;
 
-pub fn gen_and_verify_batch_proofs(agg_prover: &mut Prover, layer3_snark: Snark, output_dir: &str) {
+pub fn gen_and_verify_batch_proofs(
+    agg_prover: &mut Prover,
+    layer3_snark: Snark,
+    output_dir: &str,
+    params_dir: &str,
+) {
     let evm_proof = gen_and_verify_normal_and_evm_proofs(
         &mut agg_prover.inner,
         LayerId::Layer4,
@@ -15,13 +19,14 @@ pub fn gen_and_verify_batch_proofs(agg_prover: &mut Prover, layer3_snark: Snark,
         Some(output_dir),
     )
     .1;
-    verify_batch_proof(evm_proof, output_dir);
+    verify_batch_proof(evm_proof, output_dir, params_dir);
 }
 
 pub fn gen_and_verify_chunk_proofs(
     zkevm_prover: &mut zkevm::Prover,
     layer1_snark: Snark,
     output_dir: &str,
+    params_dir: &str,
 ) {
     let normal_proof = gen_and_verify_normal_and_evm_proofs(
         &mut zkevm_prover.inner,
@@ -30,7 +35,7 @@ pub fn gen_and_verify_chunk_proofs(
         Some(output_dir),
     )
     .0;
-    verify_chunk_proof(&zkevm_prover.inner, normal_proof, output_dir);
+    verify_chunk_proof(&zkevm_prover.inner, normal_proof, output_dir, params_dir);
 }
 
 pub fn gen_and_verify_normal_and_evm_proofs(
@@ -99,25 +104,30 @@ fn gen_normal_proof(
     snark
 }
 
-fn verify_batch_proof(evm_proof: EvmProof, output_dir: &str) {
+fn verify_batch_proof(evm_proof: EvmProof, output_dir: &str, params_dir: &str) {
     let batch_proof = BatchProof::from(evm_proof.proof);
     batch_proof.dump(output_dir, "agg").unwrap();
     batch_proof.clone().assert_calldata();
 
-    let verifier = Verifier::from_dirs(PARAMS_DIR, output_dir);
+    let verifier = Verifier::from_dirs(params_dir, output_dir);
     log::info!("Constructed aggregator verifier");
 
     assert!(verifier.verify_agg_evm_proof(batch_proof));
     log::info!("Verified batch proof");
 }
 
-fn verify_chunk_proof(prover: &common::Prover, normal_proof: Snark, output_dir: &str) {
+fn verify_chunk_proof(
+    prover: &common::Prover,
+    normal_proof: Snark,
+    output_dir: &str,
+    params_dir: &str,
+) {
     let pk = prover.pk(LayerId::Layer2.id()).unwrap();
     let chunk_proof =
         ChunkProof::new(normal_proof, StorageTrace::default(), Some(pk), None).unwrap();
     chunk_proof.dump(output_dir, "0").unwrap();
 
-    let verifier = zkevm::Verifier::from_dirs(PARAMS_DIR, output_dir);
+    let verifier = zkevm::Verifier::from_dirs(params_dir, output_dir);
     log::info!("Constructed zkevm verifier");
 
     assert!(verifier.verify_chunk_proof(chunk_proof));

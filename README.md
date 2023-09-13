@@ -1,16 +1,30 @@
 # lambda-zkevm
 
+## Prepare
+Download parms using:
+```
+sh download_setup.sh <degree>
+```
+The recommended degree is `20`, `24`, and `26`, could only download params of degree 26, but it may affect performance (when dowsizing params)..
+
 ## Prove & Verify
 
 Run prove with default prove and verify:
 ```
-cargo run --release -- run
+cargo run --release -- run --trace-path <your/trace/path>
 ```
 
 Run prove with default mock prove and verify:
 ```
-cargo run --release -- run --mock
+cargo run --release -- run --mock --trace-path contracts/Circom/new_circom.json
 ```
+if not set `--trace-path` will use `contracts/Calculation/new_calculation.json` as default.
+
+Or look at the help:
+```
+cargo run --release -- run --help
+```
+
 ## Dry run
 
 Sepcify a file like the following:
