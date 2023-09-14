@@ -27,14 +27,10 @@ hex = "0.4.3"
 clap = "4.3"
 anyhow = "1.0"
 thiserror = "1.0"
-# revm-interpreter = "1.1.2"
-# revm-primitives = "1.1.2"
-# revm-precompile = "2.0.3"
-# revm = "3.3.0"
-revm-interpreter = { path = "../revm/crates/interpreter" }
-revm-primitives = { path = "../revm/crates/primitives" }
-revm-precompile = { path = "../revm/crates/precompile" }
-revm = { path = "../revm/crates/revm" }
+revm-interpreter = { git = "https://github.com/dompute/revm", branch = "simplify_opcode" }
+revm-primitives = { git = "https://github.com/dompute/revm", branch = "simplify_opcode" }
+revm-precompile = { git = "https://github.com/dompute/revm", branch = "simplify_opcode" }
+revm = { git = "https://github.com/dompute/revm", branch = "simplify_opcode" }
 
 bus-mapping = { git = "https://github.com/dompute/zkevm-circuits.git", rev = "37d260808a1f2f6071c88547b8f2c67cfe18e2f0" }
 eth-types = { git = "https://github.com/dompute/zkevm-circuits.git", rev = "37d260808a1f2f6071c88547b8f2c67cfe18e2f0" }
