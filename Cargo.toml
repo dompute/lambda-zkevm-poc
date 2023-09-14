@@ -16,20 +16,22 @@ hex = "0.4.3"
 clap = { version = "=4.2.1", features = ["derive", "env"] }
 anyhow = "1.0"
 thiserror = "1.0"
-revm-interpreter = "1.1.2"
-revm-primitives = "1.1.2"
 chrono = "0.4.23"
+revm-interpreter = { git = "https://github.com/dompute/revm", branch = "simplify_opcode" }
+revm-primitives = { git = "https://github.com/dompute/revm", branch = "simplify_opcode" }
+revm-precompile = { git = "https://github.com/dompute/revm", branch = "simplify_opcode" }
+revm = { git = "https://github.com/dompute/revm", branch = "simplify_opcode" }
 
 halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2.git", tag = "v2023_02_02" }
 prover = { git = "https://github.com/dompute/zkevm-circuits.git", branch = "lambda-zkevm", default-features = false, features = [
-	"parallel_syn",
-	"scroll",
-	"shanghai",
+    "parallel_syn",
+    "scroll",
+    "shanghai",
 ] }
 glob = "0.3.0"
 log4rs = { version = "1.2.0", default_features = false, features = [
-	"console_appender",
-	"file_appender",
+    "console_appender",
+    "file_appender",
 ] }
 rand = "0.8"
 

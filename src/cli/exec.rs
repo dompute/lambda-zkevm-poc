@@ -18,9 +18,10 @@ pub fn match_operation(cli: &Cli) {
     match &cli.command {
         Commands::DryRun(args) => {
             dry_run::exec_dry_run(
-                args.calldata.as_ref(),
-                args.bytecode.as_ref(),
-                args.file.as_ref(),
+                args.calldata.as_deref(),
+                args.bytecode.as_deref(),
+                args.hardcode.as_deref(),
+                args.file.as_deref(),
             );
         }
         Commands::Run(args) => {

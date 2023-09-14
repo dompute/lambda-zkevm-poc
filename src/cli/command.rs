@@ -17,11 +17,7 @@ pub struct RunArgs {
     #[arg(long)]
     pub mock: bool,
 
-    #[arg(
-        long,
-        env = "TRACE_PATH",
-        default_value = "./traces/calculation.json"
-    )]
+    #[arg(long, env = "TRACE_PATH", default_value = "./traces/calculation.json")]
     pub trace_path: Vec<String>,
 
     #[arg(long)]
@@ -45,10 +41,12 @@ pub struct RunArgs {
 
 #[derive(Args)]
 pub struct DryRunArgs {
-    #[arg(long)]
+    #[arg(short, long)]
     pub calldata: Option<String>,
-    #[arg(long)]
+    #[arg(short, long)]
     pub bytecode: Option<String>,
-    #[arg(long)]
+    #[arg(short = 'd', long)]
+    pub hardcode: Option<String>,
+    #[arg(short, long)]
     pub file: Option<String>,
 }
