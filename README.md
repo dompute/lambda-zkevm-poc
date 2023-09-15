@@ -42,7 +42,7 @@ cargo run --release -- dry-run --calldata 771602f7000000000000000000000000000000
 ```
 
 ## Open source credit
-https://github.com/scroll-tech/scroll-prover
-https://github.com/scroll-tech/zkevm-circuits
-https://github.com/foundry-rs/foundry
-https://github.com/bluealloy/revm
+https://github.com/scroll-tech/scroll-prover <br>
+https://github.com/scroll-tech/zkevm-circuits <br>
+https://github.com/foundry-rs/foundry <br>
+https://github.com/bluealloy/revm <br>
